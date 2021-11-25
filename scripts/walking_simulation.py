@@ -473,7 +473,7 @@ class WalkingSimulation(object):
         return QuadrupedCmdResponse(0, "get the mode")
 
     def __callback_body_vel(self, msg):
-        vel = [msg.linear.x, msg.linear.y, msg.angular.x]
+        vel = [msg.linear.x, msg.linear.y, msg.angular.z]
         self.cpp_gait_ctrller.set_robot_vel(self.__convert_type(vel))
 
     def __fill_tf_message(self, parent_frame, child_frame, translation, rotation):
