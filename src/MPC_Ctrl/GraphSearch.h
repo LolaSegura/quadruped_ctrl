@@ -4,7 +4,6 @@
 #include <vector>
 #include "Utilities/cppTypes.h"
 
-
 struct ContactState {
   union {
     bool contact[4];
@@ -105,6 +104,7 @@ private:
   std::vector<FootplanStateCost> _stateCosts;
   std::vector<FootplanTransitionCost> _transitionCosts;
   std::vector<InputTrajectoryState> _inputTrajectory;
+
 };
 
 

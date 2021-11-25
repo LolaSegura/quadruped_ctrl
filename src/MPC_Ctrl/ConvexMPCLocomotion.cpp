@@ -5,6 +5,7 @@
 #include "Utilities/Timer.h"
 #include "Utilities/Utilities_print.h"
 #include "convexMPC_interface.h"
+#include <grid_map_msgs/GridMap.h>
 // #include "../../../../common/FootstepPlanner/GraphSearch.h"
 
 // #include "Gait.h"
@@ -358,8 +359,10 @@ void ConvexMPCLocomotion::run(Quadruped<float>& _quadruped,
     pfy_rel = fminf(fmaxf(pfy_rel, -p_rel_max), p_rel_max);
     Pf[0] += pfx_rel;
     Pf[1] += pfy_rel;
-    // Pf[2] = -0.003;
+    // Pf[2] = 0.1;
     Pf[2] = 0.0;
+    // std::cout << "foot: " << i << "    position: " << footSwingTrajectories[i].getPosition() << std::endl; 
+    // std::cout << "pf: " << Pf << std::endl; 
     footSwingTrajectories[i].setFinalPosition(Pf);  //最终得到足底的位置，并作为轨迹终点 世界坐标系下的落足点
   }
   // std::cout << std::endl;

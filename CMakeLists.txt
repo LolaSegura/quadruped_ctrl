@@ -49,11 +49,13 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+find_package(OpenCV)
 
 include_directories(${catkin_INCLUDE_DIRS}
   include
   include/${PROJECT_NAME}
   ${Eigen3_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
   src
 )
 
@@ -88,6 +90,7 @@ target_link_libraries(${PROJECT_NAME}
   JCQP
   qpOASES
   osqp
+  ${OpenCV_LIBRARIES}
 )
 
 #############
