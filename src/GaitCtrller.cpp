@@ -67,14 +67,12 @@ void GaitCtrller::SetGaitType(int gaitType) {
   std::cout << "set gait type to: " << _gaitType << std::endl;
 }
 
-void GaitCtrller::SetString(std::string my_str) {
-  (void) my_str;
-  //std::string new_str = my_str;
-  std::cout << "Getting string" << std::endl;
-}
-
-void GaitCtrller::StoreElevationMap(grid_map_msgs::GridMap const map) {
-  _elevationMap = map;
+void GaitCtrller::StoreElevationMap(double map[]) {
+  _elevationMap.clear();
+  for(int i = 0; i < 18000; ++i)
+  {
+    _elevationMap.push_back(map[i]);
+  }
   std::cout << "setting elevation map " << std::endl;
 }
 
@@ -134,7 +132,7 @@ void GaitCtrller::TorqueCalculator(double* imuData, double* motorData,
   }
 
   convexMPC->run(_quadruped, *_legController, *_stateEstimator,
-                 *_desiredStateCommand, _gamepadCommand, _gaitType, _robotMode);
+                 *_desiredStateCommand, _gamepadCommand, _gaitType, _elevationMap,_robotMode);
 
   _legController->updateCommand(&legcommand, ctrlParam);
 

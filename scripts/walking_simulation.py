@@ -78,9 +78,8 @@ class WalkingSimulation(object):
 
         self.robot_tf = tf2_ros.TransformBroadcaster()
         self.elevation_map = Float32MultiArray()
-        self.em_map = np.asarray()
-
-
+        self.em_map = []
+        # np.asarray()
 
     def __load_controller(self):
         self.path = rospkg.RosPack().get_path('quadruped_ctrl')
@@ -451,7 +450,7 @@ class WalkingSimulation(object):
             int: ctypes.c_int,
             float: ctypes.c_double,
             str: ctypes.c_char_p,
-                     }
+                    }
         input_type = type(input)
         if input_type is list:
             length = len(input)
@@ -483,28 +482,18 @@ class WalkingSimulation(object):
         return QuadrupedCmdResponse(0, "get the mode")
 
     def __callback_elevation_map(self, msg):
-        pass
-        # self.cpp_gait_ctrller.store_elevation_map(msg)
-        # self.cpp_gait_ctrller.set_string(self.__convert_type(msg.layers[0]))
+        map = Float32MultiArray()
+        map = msg.data
+        map_1 = []
+        for i in range(len(map)):
+            map_1 = map_1 + list(msg.data[i].data)
 
-        # string[] layers
-        # self.cpp_gait_ctrller.store_elevation_map(self.__convert_type(msg))
+        self.em_map = map_1
+        self.cpp_gait_ctrller.store_map(self.__convert_type(self.em_map))
 
     def __callback_body_vel(self, msg):
         vel = [msg.linear.x, msg.linear.y, msg.angular.z]
         self.cpp_gait_ctrller.set_robot_vel(self.__convert_type(vel))
-
-    def __callback_em(self, msg):
-        a = Float32MultiArray()
-        a = msg.data
-        map1 = ()
-        for i in range(len(a)):
-            map1 = map1 + msg.data[i].data
-
-        self.em_map = np.asarray(map1)
-
-        #rospy.loginfo(msg.data[0].layout)
-        #rospy.loginfo(len(msg.data[0].data))
 
     def __fill_tf_message(self, parent_frame, child_frame, translation, rotation):
         t = TransformStamped()
@@ -679,8 +668,6 @@ class WalkingSimulation(object):
         imu_data[2] = get_matrix[6] * linear_X + \
             get_matrix[7] * linear_Y + get_matrix[8] * linear_Z
 
-        # print("Linear velocity", linear_X)
-
         # joint data
         joint_positions, joint_velocities, _, joint_names = \
             self.__get_motor_joint_states(self.boxId)
@@ -688,14 +675,12 @@ class WalkingSimulation(object):
         leg_data["state"][12:24] = joint_velocities
         leg_data["name"] = joint_names
 
-        # print(leg_data["state"][0:12])
         # CoM velocity
         self.get_last_vel = [get_velocity[0][0], get_velocity[0][1], get_velocity[0][2]]
 
         # Contacts
         contact_points = p.getContactPoints(self.boxId)
 
-        # print(contact_points)
         return imu_data, leg_data, base_pose[0], contact_points
 
 

@@ -37,12 +37,12 @@ class GaitCtrller {
   void SetGaitType(int gaitType);
   void SetRobotMode(int mode);
   void SetRobotVel(double* vel);
-  void StoreElevationMap(grid_map_msgs::GridMap const map);
-  void SetString(std::string my_str);
+  void StoreElevationMap(double map[]);
   void TorqueCalculator(double* imuData, double* motorData, double* effort);
 
  private:
-  grid_map_msgs::GridMap _elevationMap;
+  std::vector<float> _elevationMap;
+
   int _gaitType = 0;
   int _robotMode = 0;
   bool _safetyCheck = true;
@@ -84,14 +84,9 @@ void pre_work(double imuData[], double legData[]) {
 }
 
 // elevation map 
-void store_elevation_map(grid_map_msgs::GridMap const map) { gCtrller->StoreElevationMap(map); }
+void store_map(double map[]) { gCtrller->StoreElevationMap(map); }
 
-// Primitivos 
-void set_string(std::string my_str) { 
-  (void) my_str;
-  // std::cout << my_str << std::endl;
-  // gCtrller->SetString(my_str); 
-}
+// void store_elevation_map(grid_map_msgs::GridMap const map) { gCtrller->StoreElevationMap(map); }
 
 // gait type can be set in any time
 void set_gait_type(int gaitType) { gCtrller->SetGaitType(gaitType); }

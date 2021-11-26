@@ -1,6 +1,7 @@
 #include "ConvexMPCLocomotion.h"
 
 #include <iostream>
+#include <vector>
 
 #include "Utilities/Timer.h"
 #include "Utilities/Utilities_print.h"
@@ -113,7 +114,9 @@ void ConvexMPCLocomotion::run(Quadruped<float>& _quadruped,
                               StateEstimatorContainer<float>& _stateEstimator,
                               DesiredStateCommand<float>& /*_desiredStateCommand*/,
                               std::vector<double> gamepadCommand,
-                              int gaitType, int robotMode) {
+                              int gaitType, std::vector<float> map, int robotMode) {
+
+  (void)map;
   bool omniMode = false;
   // Command Setup
   _SetupCommand(_stateEstimator, gamepadCommand);
