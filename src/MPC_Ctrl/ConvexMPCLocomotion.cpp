@@ -362,6 +362,15 @@ void ConvexMPCLocomotion::run(Quadruped<float>& _quadruped,
     pfy_rel = fminf(fmaxf(pfy_rel, -p_rel_max), p_rel_max);
     Pf[0] += pfx_rel;
     Pf[1] += pfy_rel;
+   /*
+    for (auto& i : map){
+       std::cout << i << std::endl;
+    }
+    */
+    //int x = Pf[0];
+    //int y = Pf[1];
+    //std::cout << map[0] << std::endl;
+    //std::cout << map[x*60 + y] << std::endl;
     // Pf[2] = 0.1;
     Pf[2] = 0.0;
     // std::cout << "foot: " << i << "    position: " << footSwingTrajectories[i].getPosition() << std::endl; 

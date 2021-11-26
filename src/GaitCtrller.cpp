@@ -69,7 +69,7 @@ void GaitCtrller::SetGaitType(int gaitType) {
 
 void GaitCtrller::StoreElevationMap(double map[]) {
   _elevationMap.clear();
-  for(int i = 0; i < 18000; ++i)
+  for(int i = 0; i < 3600; ++i)
   {
     _elevationMap.push_back(map[i]);
   }
