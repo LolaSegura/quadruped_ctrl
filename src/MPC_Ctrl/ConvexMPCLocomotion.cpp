@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "Utilities/Timer.h"
 #include "Utilities/Utilities_print.h"
@@ -362,17 +363,36 @@ void ConvexMPCLocomotion::run(Quadruped<float>& _quadruped,
     pfy_rel = fminf(fmaxf(pfy_rel, -p_rel_max), p_rel_max);
     Pf[0] += pfx_rel;
     Pf[1] += pfy_rel;
-   /*
-    for (auto& i : map){
-       std::cout << i << std::endl;
+
+    if (map.size() > 0)
+    {
+      int x = static_cast<int>(Pf[0] * 10);
+      int y = static_cast<int>(Pf[1] * 10);
+      if (std::isnan(map[x * 60 + y]))
+      {
+        Pf[2] = 0.0;
+      }
+      else
+      {
+        Pf[2] = map[x * 60 + y];
+        std::cout << Pf[2] << std::endl;
+      }
     }
-    */
-    //int x = Pf[0];
-    //int y = Pf[1];
+
+    /*if(std::isnan(map[x * 60 + y])){
+      Pf[2] = 0.0;
+      std::cout << "si" << std::endl;
+    }
+    else {
+      Pf[2] = 0; 
+      std::cout << "no" << std::endl;
+    }
+  */
     //std::cout << map[0] << std::endl;
     //std::cout << map[x*60 + y] << std::endl;
-    // Pf[2] = 0.1;
-    Pf[2] = 0.0;
+    //Pf[2] = 0.0;
+    //std::cout << Pf[2] << std::endl;
+    //Pf[2] = 0.0;
     // std::cout << "foot: " << i << "    position: " << footSwingTrajectories[i].getPosition() << std::endl; 
     // std::cout << "pf: " << Pf << std::endl; 
     footSwingTrajectories[i].setFinalPosition(Pf);  //最终得到足底的位置，并作为轨迹终点 世界坐标系下的落足点

@@ -484,14 +484,16 @@ class WalkingSimulation(object):
     def __callback_elevation_map(self, msg):
         map = Float32MultiArray()
         map = msg.data
-        map_1 = [None]*3600
+        map_1 = [0]*3600
         arr = np.array(map_1)
         for i in range(len(map)):
             arr = arr + np.array(msg.data[i].data)
 
-        self.em_map = arr.tolist()
-        rospy.loginfo(len(self.em_map))
-        self.cpp_gait_ctrller.store_map(self.__convert_type(self.em_map))
+        #rospy.loginfo(len(arr))
+
+        #self.em_map = arr.tolist()
+        #rospy.loginfo(len(self.em_map))
+        self.cpp_gait_ctrller.store_map(self.__convert_type(arr.tolist()))
 
     def __callback_body_vel(self, msg):
         vel = [msg.linear.x, msg.linear.y, msg.angular.z]
