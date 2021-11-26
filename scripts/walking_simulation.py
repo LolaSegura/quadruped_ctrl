@@ -13,6 +13,7 @@ import rospkg
 import rospy
 import tf2_ros
 import threading
+import numpy as np
 
 from cv_bridge import CvBridge
 from nav_msgs.msg import Odometry
@@ -25,7 +26,8 @@ from whole_body_state_msgs.msg import WholeBodyState
 from whole_body_state_msgs.msg import JointState as WBJointState
 from whole_body_state_msgs.msg import ContactState as WBContactState
 from grid_map_msgs.msg import GridMap
-
+from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Float32
 
 
 class StructPointer(ctypes.Structure):
@@ -63,6 +65,7 @@ class WalkingSimulation(object):
         self.stand_kd = rospy.get_param('/simulation/stand_kd')
         self.joint_kp = rospy.get_param('/simulation/joint_kp')
         self.joint_kd = rospy.get_param('/simulation/joint_kd')
+        self.elevation_map = GridMap()
         rospy.loginfo("lateralFriction = " + str(self.lateralFriction) +
                       " spinningFriction = " + str(self.spinningFriction))
         rospy.loginfo(" freq = " + str(self.freq) + " PID = " +
@@ -74,6 +77,8 @@ class WalkingSimulation(object):
         self.s3 = rospy.Subscriber("elevation_mapping/elevation_map", GridMap, self.__callback_elevation_map)
 
         self.robot_tf = tf2_ros.TransformBroadcaster()
+        self.elevation_map = Float32MultiArray()
+        self.em_map = np.asarray()
 
 
 
@@ -488,6 +493,18 @@ class WalkingSimulation(object):
     def __callback_body_vel(self, msg):
         vel = [msg.linear.x, msg.linear.y, msg.angular.z]
         self.cpp_gait_ctrller.set_robot_vel(self.__convert_type(vel))
+
+    def __callback_em(self, msg):
+        a = Float32MultiArray()
+        a = msg.data
+        map1 = ()
+        for i in range(len(a)):
+            map1 = map1 + msg.data[i].data
+
+        self.em_map = np.asarray(map1)
+
+        #rospy.loginfo(msg.data[0].layout)
+        #rospy.loginfo(len(msg.data[0].data))
 
     def __fill_tf_message(self, parent_frame, child_frame, translation, rotation):
         t = TransformStamped()
