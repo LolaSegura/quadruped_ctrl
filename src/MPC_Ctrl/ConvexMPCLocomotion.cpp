@@ -366,16 +366,16 @@ void ConvexMPCLocomotion::run(Quadruped<float>& _quadruped,
 
     if (map.size() > 0)
     {
-      int x = static_cast<int>(Pf[0] * 10);
-      int y = static_cast<int>(Pf[1] * 10);
+      int x = std::abs(static_cast<int>((Pf[0]) * 10));
+      int y = std::abs(static_cast<int>((Pf[1]) * 10));
       if (std::isnan(map[x * 60 + y]))
       {
         Pf[2] = 0.0;
       }
       else
       {
-        Pf[2] = map[x * 60 + y];
-        std::cout << Pf[2] << std::endl;
+        Pf[2] = std::abs(map[x * 60 + y]/10);
+        std::cout << x << " " << y  << " " << Pf[2] << std::endl;
       }
     }
 
