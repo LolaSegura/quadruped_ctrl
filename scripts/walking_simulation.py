@@ -478,7 +478,12 @@ class WalkingSimulation(object):
         return QuadrupedCmdResponse(0, "get the mode")
 
     def __callback_elevation_map(self, msg):
-        print("Receiving!!")
+        pass
+        # self.cpp_gait_ctrller.store_elevation_map(msg)
+        # self.cpp_gait_ctrller.set_string(self.__convert_type(msg.layers[0]))
+
+        # string[] layers
+        # self.cpp_gait_ctrller.store_elevation_map(self.__convert_type(msg))
 
     def __callback_body_vel(self, msg):
         vel = [msg.linear.x, msg.linear.y, msg.angular.z]

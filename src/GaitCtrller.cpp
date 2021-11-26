@@ -67,6 +67,17 @@ void GaitCtrller::SetGaitType(int gaitType) {
   std::cout << "set gait type to: " << _gaitType << std::endl;
 }
 
+void GaitCtrller::SetString(std::string my_str) {
+  (void) my_str;
+  //std::string new_str = my_str;
+  std::cout << "Getting string" << std::endl;
+}
+
+void GaitCtrller::StoreElevationMap(grid_map_msgs::GridMap const map) {
+  _elevationMap = map;
+  std::cout << "setting elevation map " << std::endl;
+}
+
 void GaitCtrller::SetRobotMode(int mode) {
   _robotMode = mode;
   std::cout << "set robot mode to: " << _robotMode << std::endl;

@@ -83,6 +83,8 @@ struct CMPC_Jump {
 };
 
 
+// chapa_lola
+
 class ConvexMPCLocomotion {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

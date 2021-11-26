@@ -73,4 +73,8 @@
         "/opt/ros/melodic/lib/python2.7/dist-packages"
     ],
     "editor.fontFamily": "monospace",
+    "python.analysis.extraPaths": [
+        "/home/derek/ros_workspace/quadruped_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
 }

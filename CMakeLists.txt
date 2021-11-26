@@ -11,6 +11,7 @@ find_package(catkin REQUIRED
     roscpp
     rospy
     std_msgs
+    # grid_map_msgs
     message_generation
 )
 
@@ -82,6 +83,7 @@ add_library(${PROJECT_NAME}
   src/Dynamics/Quadruped.cpp
   src/Dynamics/FloatingBaseModel.cpp
   src/GaitCtrller.cpp
+  src/MapHandler.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

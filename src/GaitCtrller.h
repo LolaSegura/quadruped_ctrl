@@ -8,6 +8,8 @@
 #include <memory>
 #include <string>
 
+#include <grid_map_ros/grid_map_ros.hpp>
+#include <grid_map_msgs/GridMap.h>
 #include "Controllers/ContactEstimator.h"
 #include "Controllers/ControlFSMData.h"
 #include "Controllers/DesiredStateCommand.h"
@@ -35,9 +37,12 @@ class GaitCtrller {
   void SetGaitType(int gaitType);
   void SetRobotMode(int mode);
   void SetRobotVel(double* vel);
+  void StoreElevationMap(grid_map_msgs::GridMap const map);
+  void SetString(std::string my_str);
   void TorqueCalculator(double* imuData, double* motorData, double* effort);
 
  private:
+  grid_map_msgs::GridMap _elevationMap;
   int _gaitType = 0;
   int _robotMode = 0;
   bool _safetyCheck = true;
@@ -76,6 +81,16 @@ void init_controller(double freq, double PIDParam[]) {
 // the kalman filter need to work second
 void pre_work(double imuData[], double legData[]) {
   gCtrller->PreWork(imuData, legData);
+}
+
+// elevation map 
+void store_elevation_map(grid_map_msgs::GridMap const map) { gCtrller->StoreElevationMap(map); }
+
+// Primitivos 
+void set_string(std::string my_str) { 
+  (void) my_str;
+  // std::cout << my_str << std::endl;
+  // gCtrller->SetString(my_str); 
 }
 
 // gait type can be set in any time
