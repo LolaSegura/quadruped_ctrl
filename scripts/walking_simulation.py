@@ -24,6 +24,8 @@ from tf_conversions import transformations
 from whole_body_state_msgs.msg import WholeBodyState
 from whole_body_state_msgs.msg import JointState as WBJointState
 from whole_body_state_msgs.msg import ContactState as WBContactState
+from grid_map_msgs.msg import GridMap
+
 
 
 class StructPointer(ctypes.Structure):
@@ -69,8 +71,11 @@ class WalkingSimulation(object):
         self.s0 = rospy.Service('gait_type', QuadrupedCmd, self.__callback_gait)
         self.s1 = rospy.Service('robot_mode', QuadrupedCmd, self.__callback_mode)
         self.s2 = rospy.Subscriber("cmd_vel", Twist, self.__callback_body_vel, buff_size=30)
+        self.s3 = rospy.Subscriber("elevation_mapping/elevation_map", GridMap, self.__callback_elevation_map)
 
         self.robot_tf = tf2_ros.TransformBroadcaster()
+
+
 
     def __load_controller(self):
         self.path = rospkg.RosPack().get_path('quadruped_ctrl')
@@ -472,6 +477,9 @@ class WalkingSimulation(object):
         self.cpp_gait_ctrller.set_robot_mode(self.__convert_type(req.cmd))
         return QuadrupedCmdResponse(0, "get the mode")
 
+    def __callback_elevation_map(self, msg):
+        print("Receiving!!")
+
     def __callback_body_vel(self, msg):
         vel = [msg.linear.x, msg.linear.y, msg.angular.z]
         self.cpp_gait_ctrller.set_robot_vel(self.__convert_type(vel))
@@ -610,6 +618,7 @@ class WalkingSimulation(object):
         return joint_positions, joint_velocities, joint_torques, joint_name
 
     def __get_data_from_sim(self):
+        # print("Getting data!!!!")
         get_matrix = []
         get_velocity = []
         get_invert = []
@@ -648,6 +657,8 @@ class WalkingSimulation(object):
         imu_data[2] = get_matrix[6] * linear_X + \
             get_matrix[7] * linear_Y + get_matrix[8] * linear_Z
 
+        # print("Linear velocity", linear_X)
+
         # joint data
         joint_positions, joint_velocities, _, joint_names = \
             self.__get_motor_joint_states(self.boxId)
@@ -655,12 +666,14 @@ class WalkingSimulation(object):
         leg_data["state"][12:24] = joint_velocities
         leg_data["name"] = joint_names
 
+        # print(leg_data["state"][0:12])
         # CoM velocity
         self.get_last_vel = [get_velocity[0][0], get_velocity[0][1], get_velocity[0][2]]
 
         # Contacts
         contact_points = p.getContactPoints(self.boxId)
 
+        # print(contact_points)
         return imu_data, leg_data, base_pose[0], contact_points
 
 
