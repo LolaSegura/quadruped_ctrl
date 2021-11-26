@@ -24,6 +24,7 @@ from tf_conversions import transformations
 from whole_body_state_msgs.msg import WholeBodyState
 from whole_body_state_msgs.msg import JointState as WBJointState
 from whole_body_state_msgs.msg import ContactState as WBContactState
+from grid_map_msgs.msg import GridMap
 
 
 class StructPointer(ctypes.Structure):
@@ -69,6 +70,7 @@ class WalkingSimulation(object):
         self.s0 = rospy.Service('gait_type', QuadrupedCmd, self.__callback_gait)
         self.s1 = rospy.Service('robot_mode', QuadrupedCmd, self.__callback_mode)
         self.s2 = rospy.Subscriber("cmd_vel", Twist, self.__callback_body_vel, buff_size=30)
+        self.em = rospy.Subscriber("/elevation_mapping/elevation_map",  GridMap, self.__callback_em, buff_size=30)
 
         self.robot_tf = tf2_ros.TransformBroadcaster()
 
@@ -475,6 +477,9 @@ class WalkingSimulation(object):
     def __callback_body_vel(self, msg):
         vel = [msg.linear.x, msg.linear.y, msg.angular.z]
         self.cpp_gait_ctrller.set_robot_vel(self.__convert_type(vel))
+
+    def __callback_em(self, msg):
+        rospy.loginfo(msg)
 
     def __fill_tf_message(self, parent_frame, child_frame, translation, rotation):
         t = TransformStamped()
